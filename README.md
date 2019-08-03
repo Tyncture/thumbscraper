@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	imageNodes, _ := thumbscraper.GetImageNodes("https://github.com/Tyncture/thumbscraper")
+	imageNodes, err := thumbscraper.GetImageNodes("https://github.com/Tyncture/thumbscraper")
 	if err != nil {
 		// Failed to load the web page
 		// Your error handling here
