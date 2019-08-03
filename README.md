@@ -23,6 +23,7 @@ package main
 import (
 	"github.com/tyncture/thumbscraper"
 	"os"
+	"fmt"
 )
 
 func main() {
