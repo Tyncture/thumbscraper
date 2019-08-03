@@ -22,7 +22,7 @@ var urlStartRegex *regexp.Regexp
 
 // GetImageNodes returns an []ImageNode containing the
 // names, alt tags, URLs and whether an image is from an
-// OpenGraph image meta tag
+// OpenGraph image meta tag.
 func GetImageNodes(pageURL string) ([]ImageNode, error) {
 	var err error
 	imageNodes := []ImageNode{}
@@ -33,7 +33,7 @@ func GetImageNodes(pageURL string) ([]ImageNode, error) {
 	// which are used by sites such as Facebook and Reddit to determine
 	// which image from a web page should be featured as the main thumbnail
 	c.OnHTML("meta[property=\"og:image\"][content]", func(e *colly.HTMLElement) {
-		imgURL := EnsurePrependedSchema(pageURL, e.Attr("content"))
+		imgURL := EnforceURLSchema(pageURL, e.Attr("content"))
 		imgURLSegments := filterEmptyStrings(strings.Split(imgURL, "/"))
 		name := imgURLSegments[len(imgURLSegments)-1]
 
@@ -52,7 +52,7 @@ func GetImageNodes(pageURL string) ([]ImageNode, error) {
 	// scrape their useful properties
 	c.OnHTML("img[src]", func(e *colly.HTMLElement) {
 		alt := e.Attr("alt")
-		imgURL := EnsurePrependedSchema(pageURL, e.Attr("src"))
+		imgURL := EnforceURLSchema(pageURL, e.Attr("src"))
 		imgURLSegments := filterEmptyStrings(strings.Split(imgURL, "/"))
 		name := imgURLSegments[len(imgURLSegments)-1]
 
@@ -106,7 +106,7 @@ func GetImageNodeInfo(imageNode ImageNode) (*ImageNodeInfo, error) {
 
 // GetImageNodeInfoBatch does the same thing as GetImageNodeInfo,
 // but takes an ImageNode[] instead to allow you to get an
-// []ImageNodeInfo back after processing them in batch
+// []ImageNodeInfo back after processing them in batch.
 func GetImageNodeInfoBatch(imageNodes []ImageNode,
 	requireAll ...bool) ([]*ImageNodeInfo, error) {
 	imageNodesInfo := []*ImageNodeInfo{}
@@ -122,10 +122,10 @@ func GetImageNodeInfoBatch(imageNodes []ImageNode,
 	return imageNodesInfo, nil
 }
 
-// EnsurePrependedSchema ensures that all image URLs are of the
-// correct format, with the schema type and hostname properly
-// prefixed to them
-func EnsurePrependedSchema(pageURL string, imageURL string) string {
+// EnforceURLSchema enforces the proper URL format to allow
+// requests to be made to retrieve them. Images embded in HTML
+// image elements are often missing the schema prefix.
+func EnforceURLSchema(pageURL string, imageURL string) string {
 	if httpSchemaRegex.MatchString(imageURL) {
 		return imageURL
 	}
@@ -145,7 +145,7 @@ func EnsurePrependedSchema(pageURL string, imageURL string) string {
 
 // strings.Split returns everything before and after the delimiter,
 // and in cases where there is nothing before or after it,
-// it will return an empty string
+// it will return an empty string.
 func filterEmptyStrings(strings []string) []string {
 	final := []string{}
 	for _, s := range strings {

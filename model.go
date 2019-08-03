@@ -1,7 +1,7 @@
 package thumbscraper
 
 // ImageNode represents information relating to
-// images elements discovered on the requested URLs
+// images elements discovered on the requested URLs.
 type ImageNode struct {
 	Name           string
 	Alt            string
@@ -11,7 +11,7 @@ type ImageNode struct {
 
 // ImageNodeInfo represents information relating to
 // image elements discovered on the requested URLs with
-// additional useful information
+// additional useful information.
 type ImageNodeInfo struct {
 	ImageNode
 	Format string
