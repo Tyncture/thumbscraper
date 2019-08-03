@@ -5,8 +5,10 @@
 [![GoDoc](https://godoc.org/github.com/Tyncture/thumbscraper?status.svg)](https://godoc.org/github.com/Tyncture/thumbscraper)
 
 A web image scraper built in Go that can extract all images and/or determine 
-primary images of a web page for thumbnail generation. It uses the `colly` scraper 
-to scrape elements from the DOM.
+primary images of a web page. It can also then determine from a collection of
+scraped images what is the most appropriate image to use for thumbnail generation. 
+
+It uses the `colly` scraper to scrape elements from the DOM.
 
 ## Installation
 
