@@ -4,6 +4,7 @@ package main
 // images elements discovered on the requested URLs
 type ImageNode struct {
 	Name           string
+	Alt            string
 	URL            string
 	OpenGraphImage bool
 }
