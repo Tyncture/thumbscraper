@@ -1,4 +1,9 @@
 # thumbscraper
+![Repository Size](https://img.shields.io/github/repo-size/Tyncture/thumbscraper.svg?t&style=flat-square)
+![License](https://img.shields.io/github/license/Tyncture/thumbscraper.svg?&style=flat-square)
+![Top Language](https://img.shields.io/github/languages/top/Tyncture/thumbscraper.svg?&style=flat-square)
+[![GoDoc](https://godoc.org/github.com/Tyncture/thumbscraper?status.svg)](https://godoc.org/github.com/Tyncture/thumbscraper)
+
 A web image scraper built in Go that can extract all image URLs and/or determine 
 primary images of a web page for thumbnail generation. It uses the `colly` scraper 
 to scrape elements from the DOM.
