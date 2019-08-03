@@ -12,7 +12,7 @@ to scrape elements from the DOM.
 
 Simply run the following command to install the package to your `$GOPATH`.
 ```go
-go get "github.com/Tyncture/thumbscraper"
+go get "github.com/tyncture/thumbscraper"
 ```
 
 
@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	imageNodes, _ := thumbscraper.GetImageNodes("https://github.com/Tyncture/thumbscraper")
+	imageNodes, err := thumbscraper.GetImageNodes("https://github.com/Tyncture/thumbscraper")
 	if err != nil {
 		// Failed to load the web page
 		// Your error handling here
