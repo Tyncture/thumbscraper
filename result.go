@@ -14,6 +14,7 @@ type ImageNode struct {
 // additional useful information
 type ImageNodeInfo struct {
 	ImageNode
+	Format string
 	Height int
 	Width  int
 }
