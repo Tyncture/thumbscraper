@@ -20,6 +20,11 @@ import (
 var httpSchemaRegex *regexp.Regexp
 var urlStartRegex *regexp.Regexp
 
+type ImageNodeInfoOptions struct {
+	RequireAll   bool
+	ScrapeImages bool
+}
+
 // GetImageNodes returns an []ImageNode containing the
 // names, alt tags, URLs and whether an image is from an
 // OpenGraph image meta tag.
