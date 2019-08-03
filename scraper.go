@@ -20,9 +20,17 @@ import (
 var httpSchemaRegex *regexp.Regexp
 var urlStartRegex *regexp.Regexp
 
+// ImageNodeInfoOptions represents the configuration used by
+// GetImageNodeInfo. Default for ScrapeImages is false.
 type ImageNodeInfoOptions struct {
-	RequireAll   bool
 	ScrapeImages bool
+}
+
+// ImageNodeInfoBatchOptions represents the configuration used by
+// GetImageNodeInfoBatch. Default for RequireAll is false.
+type ImageNodeInfoBatchOptions struct {
+	ImageNodeInfoOptions
+	RequireAll bool
 }
 
 // GetImageNodes returns an []ImageNode containing the

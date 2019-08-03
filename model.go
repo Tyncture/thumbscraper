@@ -16,7 +16,8 @@ type ImageNode struct {
 // ImageNodeInfo represents information relating to
 // image elements discovered on the requested URLs with
 // additional useful information. Image is only populated
-// if ScrapeImages is set to true in ImageNodeInfo options.
+// if ScrapeImages is set to true in ImageNodeInfoOptions
+// or ImageNodeInfoBatchOptions.
 type ImageNodeInfo struct {
 	ImageNode
 	Format string
