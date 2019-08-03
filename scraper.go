@@ -14,6 +14,9 @@ func GetImageNodes(url string) []ImageNode {
 
 	c := colly.NewCollector()
 
+	// Get images specified in the OpenGraph og:image meta property tags,
+	// which are used by sites such as Facebook and Reddit to determine
+	// which image from a web page should be featured as the main thumbnail
 	c.OnHTML("meta[property=\"og:image\"][content]", func(e *colly.HTMLElement) {
 		url := e.Attr("content")
 		urlSegments := strings.Split(url, "/")
@@ -28,6 +31,8 @@ func GetImageNodes(url string) []ImageNode {
 		imageNodes = append(imageNodes, imageNode)
 	})
 
+	// Get all other images which simply use a HTML image element and
+	// scrape their useful properties
 	c.OnHTML("img[src]", func(e *colly.HTMLElement) {
 		alt := e.Attr("alt")
 		url := e.Attr("src")
