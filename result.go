@@ -1,11 +1,18 @@
 package main
 
-// ImageNode represents an image discovered on the
-// requested URL during the scraping process
+// ImageNode represents information relating to
+// images elements discovered on the requested URLs
 type ImageNode struct {
-	Height         int
-	Width          int
-	Format         string
+	Name           string
 	URL            string
 	OpenGraphImage bool
+}
+
+// ImageNodeInfo represents information relating to
+// image elements discovered on the requested URLs with
+// additional useful information
+type ImageNodeInfo struct {
+	ImageNode
+	Height int
+	Width  int
 }
