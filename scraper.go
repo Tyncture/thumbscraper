@@ -1,9 +1,12 @@
-package main
+package thumbscraper
 
 import (
 	"errors"
 	"fmt"
 	"image"
+
+	// Image type import as side effects to support
+	// different image formats
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
