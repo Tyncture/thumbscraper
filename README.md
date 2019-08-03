@@ -90,8 +90,8 @@ type ImageNodeInfo struct {
 
 ImageNodeInfo represents information relating to image elements discovered on
 the requested URLs with additional useful information. Image is only populated
-if ScrapeImages is set to true in ImageNodeInfoOptions or
-ImageNodeInfoBatchOptions.
+if ScrapeImages is set to true in GetImageNodeInfoOptions or
+GetImageNodeInfoBatchOptions.
 
 #### func  GetImageNodeInfo
 
