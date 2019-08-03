@@ -138,7 +138,8 @@ func EnforceURLSchema(pageURL string, imageURL string) string
 ```
 EnforceURLSchema enforces the proper URL format to allow requests to be made to
 retrieve them. Images embeded in HTML image elements are often missing the
-schema prefix.
+schema prefix. This is used by GetImageNodeInfo to ensure that the URL is valid 
+before making a request for the image resource.
 
 ## License
 ```
