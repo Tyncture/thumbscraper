@@ -8,6 +8,40 @@ A web image scraper built in Go that can extract all image URLs and/or determine
 primary images of a web page for thumbnail generation. It uses the `colly` scraper 
 to scrape elements from the DOM.
 
+## Installation
+
+Simply run the following command to install the package to your `$GOPATH`.
+```go
+go get "github.com/Tyncture/thumbscraper"
+```
+
+
+And then you can use it in your project like so.
+```go
+package main
+
+import (
+	"github.com/tyncture/thumbscraper"
+)
+
+func main() {
+	imageNodes, _ := thumbscraper.GetImageNodes("https://github.com/Tyncture/thumbscraper")
+	if err != nil {
+		// Failed to load the web page
+		// Your error handling here
+	}
+
+	imageNodesInfo, err := thumbscraper.GetImageNodeInfoBatch(imageNodes)
+	if err != nil {
+		// If using thumbscraper.GetImageNodeInfoBatch(imageNodes, true), then
+		// an error is returned if not all images are successfully processed
+		// Otherwise, if the second parameter is false or empty, it will run
+		// to completion, even if some images cannot be processed successfully
+		// Your error handling here
+	}
+}
+```
+
 ## Documentation
 
 #### type ImageNode
