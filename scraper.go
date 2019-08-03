@@ -106,7 +106,11 @@ func GetImageNodeInfo(imageNode ImageNode) (*ImageNodeInfo, error) {
 
 // GetImageNodeInfoBatch does the same thing as GetImageNodeInfo,
 // but takes an ImageNode[] instead to allow you to get an
-// []ImageNodeInfo back after processing them in batch.
+// []ImageNodeInfo back after processing them in batch. The last
+// parameter, requireAll, is an optional parameter that will allow
+// you to force this function to return an error if not all image
+// nodes could be processed. By default, it will not return an error
+// on partial success.
 func GetImageNodeInfoBatch(imageNodes []ImageNode,
 	requireAll ...bool) ([]*ImageNodeInfo, error) {
 	imageNodesInfo := []*ImageNodeInfo{}
@@ -123,7 +127,7 @@ func GetImageNodeInfoBatch(imageNodes []ImageNode,
 }
 
 // EnforceURLSchema enforces the proper URL format to allow
-// requests to be made to retrieve them. Images embded in HTML
+// requests to be made to retrieve them. Images embeded in HTML
 // image elements are often missing the schema prefix.
 func EnforceURLSchema(pageURL string, imageURL string) string {
 	if httpSchemaRegex.MatchString(imageURL) {
