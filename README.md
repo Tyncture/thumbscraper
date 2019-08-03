@@ -22,6 +22,7 @@ package main
 
 import (
 	"github.com/tyncture/thumbscraper"
+	"os"
 )
 
 func main() {
@@ -42,7 +43,10 @@ func main() {
 	}
 
 	// Get the best thumbnail and print the URL
-	thumbnail := thumbscraper.DetermineThumbnail(imageNodesInfo)
+	thumbnail, err := thumbscraper.DetermineThumbnail(imageNodesInfo)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "No images to process")
+	}
 	fmt.Println(thumbnail.URL)
 }
 ```
@@ -148,12 +152,13 @@ before making a request for the image resource.
 #### func  DetermineThumbnail
 
 ```go
-func DetermineThumbnail(imageNodesWithInfo []*ImageNodeInfo) *ImageNodeInfo
+func DetermineThumbnail(imageNodesWithInfo []*ImageNodeInfo) (*ImageNodeInfo, error)
 ```
 DetermineThumbnail returns the *ImageNodeInfo for the best thumbnail from a
 []*ImageNodeInfo. The *ImageNodeInfo will also have the image itself in the
 Image property if ScrapeImages is set to true in GetImageNodeInfoBatchOptions
-that was passed into GetImageNodeInfoBatch.
+that was passed into GetImageNodeInfoBatch. error is returned if the supplied
+[]*ImageNodeInfo is empty.
 
 
 ## License
