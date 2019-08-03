@@ -89,6 +89,33 @@ func GetImageNodes(pageURL string) ([]ImageNode, error) {
 	return imageNodes, err
 }
 
+// DetermineThumbnail returns the *ImageNodeInfo for the best thumbnail from a
+// []*ImageNodeInfo. The *ImageNodeInfo will also have the image itself in the
+// Image property if ScrapeImages is set to true in GetImageNodeInfoBatchOptions
+// that was passed into GetImageNodeInfoBatch.
+func DetermineThumbnail(imageNodesWithInfo []*ImageNodeInfo) *ImageNodeInfo {
+	var bestMatch *ImageNodeInfo
+
+	for _, cur := range imageNodesWithInfo {
+		if cur.OpenGraphImage {
+			return cur
+		}
+
+		if bestMatch == nil {
+			bestMatch = cur
+			continue
+		}
+
+		area := cur.Width * cur.Height
+		bestMatchArea := bestMatch.Width * bestMatch.Height
+		if area > bestMatchArea {
+			bestMatch = cur
+		}
+	}
+
+	return bestMatch
+}
+
 // GetImageNodeInfo takes an ImageNode and returns an *ImageNodeInfo
 // struct with additional properties received after loading and
 // analysing the image itself. options is an optional GetImageNodeInfoOptions

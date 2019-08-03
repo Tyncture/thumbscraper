@@ -40,6 +40,10 @@ func main() {
 		// to completion, even if some images cannot be processed successfully
 		// Your error handling here
 	}
+
+	// Get the best thumbnail and print the URL
+	thumbnail := thumbscraper.DetermineThumbnail(imageNodesInfo)
+	fmt.Println(thumbnail.URL)
 }
 ```
 
@@ -138,8 +142,19 @@ func EnforceURLSchema(pageURL string, imageURL string) string
 ```
 EnforceURLSchema enforces the proper URL format to allow requests to be made to
 retrieve them. Images embeded in HTML image elements are often missing the
-schema prefix. This is used by GetImageNodeInfo to ensure that the URL is valid 
+schema prefix. This is used by GetImageNodeInfo to ensure that the URL is valid
 before making a request for the image resource.
+
+#### func  DetermineThumbnail
+
+```go
+func DetermineThumbnail(imageNodesWithInfo []*ImageNodeInfo) *ImageNodeInfo
+```
+DetermineThumbnail returns the *ImageNodeInfo for the best thumbnail from a
+[]*ImageNodeInfo. The *ImageNodeInfo will also have the image itself in the
+Image property if ScrapeImages is set to true in GetImageNodeInfoBatchOptions
+that was passed into GetImageNodeInfoBatch.
+
 
 ## License
 ```
