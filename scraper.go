@@ -20,16 +20,16 @@ import (
 var httpSchemaRegex *regexp.Regexp
 var urlStartRegex *regexp.Regexp
 
-// ImageNodeInfoOptions represents the configuration used by
+// GetImageNodeInfoOptions represents the configuration used by
 // GetImageNodeInfo. Default for ScrapeImages is false.
-type ImageNodeInfoOptions struct {
+type GetImageNodeInfoOptions struct {
 	ScrapeImages bool
 }
 
-// ImageNodeInfoBatchOptions represents the configuration used by
+// GetImageNodeInfoBatchOptions represents the configuration used by
 // GetImageNodeInfoBatch. Default for RequireAll is false.
-type ImageNodeInfoBatchOptions struct {
-	ImageNodeInfoOptions
+type GetImageNodeInfoBatchOptions struct {
+	GetImageNodeInfoOptions
 	RequireAll bool
 }
 
@@ -91,8 +91,10 @@ func GetImageNodes(pageURL string) ([]ImageNode, error) {
 
 // GetImageNodeInfo takes an ImageNode and returns an *ImageNodeInfo
 // struct with additional properties received after loading and
-// analysing the image itself
-func GetImageNodeInfo(imageNode ImageNode) (*ImageNodeInfo, error) {
+// analysing the image itself. options is an optional GetImageNodeInfoOptions
+// struct to specify whether to keep images in the returned ImageNodeInfo
+// struct, default of which is false.
+func GetImageNodeInfo(imageNode ImageNode, options ...GetImageNodeInfoOptions) (*ImageNodeInfo, error) {
 	res, err := http.Get(imageNode.URL)
 	if err != nil {
 		return nil, err
@@ -113,26 +115,44 @@ func GetImageNodeInfo(imageNode ImageNode) (*ImageNodeInfo, error) {
 		Format:    format,
 		Width:     imageBounds.Max.X,
 		Height:    imageBounds.Max.Y,
+		Image:     nil,
 	}
+
+	if len(options) > 0 && options[0].ScrapeImages {
+		imageNodeInfo.Image = &img
+	}
+
 	return imageNodeInfo, nil
 }
 
 // GetImageNodeInfoBatch does the same thing as GetImageNodeInfo,
 // but takes an ImageNode[] instead to allow you to get an
-// []ImageNodeInfo back after processing them in batch. The last
-// parameter, requireAll, is an optional parameter that will allow
-// you to force this function to return an error if not all image
-// nodes could be processed. By default, it will not return an error
-// on partial success.
+// []ImageNodeInfo back after processing them in batch. options is
+// an optional GetImageNodeInfoBatch options struct to specify whether
+// to keep images in the returned ImageNodeInfo structs, default of
+// which is false, and whether to require all image requests to complete
+// successfully, default of which is also false. Refer to struct type
+// GetImageNodeInfoBatchOptions for more information.
 func GetImageNodeInfoBatch(imageNodes []ImageNode,
-	requireAll ...bool) ([]*ImageNodeInfo, error) {
+	options ...GetImageNodeInfoBatchOptions) ([]*ImageNodeInfo, error) {
 	imageNodesInfo := []*ImageNodeInfo{}
+	localOptions := GetImageNodeInfoBatchOptions{
+		GetImageNodeInfoOptions: GetImageNodeInfoOptions{
+			ScrapeImages: false,
+		},
+		RequireAll: false,
+	}
+
+	if len(options) > 0 {
+		localOptions = options[0]
+	}
 
 	for _, imageNode := range imageNodes {
-		imageNodeInfo, err := GetImageNodeInfo(imageNode)
+		imageNodeInfo, err := GetImageNodeInfo(imageNode,
+			localOptions.GetImageNodeInfoOptions)
 		if err == nil {
 			imageNodesInfo = append(imageNodesInfo, imageNodeInfo)
-		} else if len(requireAll) > 0 && requireAll[0] {
+		} else if localOptions.RequireAll {
 			return nil, err
 		}
 	}
@@ -141,7 +161,9 @@ func GetImageNodeInfoBatch(imageNodes []ImageNode,
 
 // EnforceURLSchema enforces the proper URL format to allow
 // requests to be made to retrieve them. Images embeded in HTML
-// image elements are often missing the schema prefix.
+// image elements are often missing the schema prefix. This is used
+// by GetImageNodeInfo to ensure that the URL is valid before making
+// a request for the image resource.
 func EnforceURLSchema(pageURL string, imageURL string) string {
 	if httpSchemaRegex.MatchString(imageURL) {
 		return imageURL

@@ -33,9 +33,10 @@ func main() {
 
 	imageNodesInfo, err := thumbscraper.GetImageNodeInfoBatch(imageNodes)
 	if err != nil {
-		// If using thumbscraper.GetImageNodeInfoBatch(imageNodes, true), then
-		// an error is returned if not all images are successfully processed
-		// Otherwise, if the second parameter is false or empty, it will run
+		// If using RequireAll is supplied in the optional GetImageNodeInfoBatchOptions
+		// and is set to true, GetImageNodeInfoBatch will return an error if it cannot 
+		// retrieve all images.
+		// Otherwise, if it is  false or the options argument is empty, it will run
 		// to completion, even if some images cannot be processed successfully
 		// Your error handling here
 	}
@@ -55,7 +56,7 @@ type ImageNode struct {
 }
 ```
 
-`ImageNode` represents information relating to HTML images elements discovered on
+ImageNode represents information relating to HTML images elements discovered on
 the requested URLs.
 
 #### func  GetImageNodes
@@ -63,7 +64,7 @@ the requested URLs.
 ```go
 func GetImageNodes(pageURL string) ([]ImageNode, error)
 ```
-`GetImageNodes` returns an `[]ImageNode` containing the names, alt tags, URLs and
+GetImageNodes returns an []ImageNode containing the names, alt tags, URLs and
 whether an image is from an OpenGraph image meta tag.
 
 #### type ImageNodeInfo
@@ -74,31 +75,61 @@ type ImageNodeInfo struct {
 	Format string
 	Height int
 	Width  int
+	Image  *image.Image
 }
 ```
 
-`ImageNodeInfo` represents information relating to image elements discovered on
-the requested URLs with additional useful information.
+ImageNodeInfo represents information relating to image elements discovered on
+the requested URLs with additional useful information. Image is only populated
+if ScrapeImages is set to true in ImageNodeInfoOptions or
+ImageNodeInfoBatchOptions.
 
 #### func  GetImageNodeInfo
 
 ```go
-func GetImageNodeInfo(imageNode ImageNode) (*ImageNodeInfo, error)
+func GetImageNodeInfo(imageNode ImageNode, options ...GetImageNodeInfoOptions) (*ImageNodeInfo, error)
 ```
-`GetImageNodeInfo` takes an `ImageNode` and returns an `*ImageNodeInfo` struct with
-additional properties received after loading and analysing the image itself
+GetImageNodeInfo takes an ImageNode and returns an *ImageNodeInfo struct with
+additional properties received after loading and analysing the image itself.
+options is an optional GetImageNodeInfoOptions struct to specify whether to keep
+images in the returned ImageNodeInfo struct, default of which is false.
 
 #### func  GetImageNodeInfoBatch
 
 ```go
 func GetImageNodeInfoBatch(imageNodes []ImageNode,
-	requireAll ...bool) ([]*ImageNodeInfo, error)
+	options ...GetImageNodeInfoBatchOptions) ([]*ImageNodeInfo, error)
 ```
-`GetImageNodeInfoBatch` does the same thing as `GetImageNodeInfo`, but takes an
-`ImageNode[]` instead to allow you to get an `[]ImageNodeInfo` back after processing
-them in batch. The last parameter, requireAll, is an optional parameter that
-will allow you to force this function to return an error if not all image nodes
-could be processed. By default, it will not return an error on partial success.
+GetImageNodeInfoBatch does the same thing as GetImageNodeInfo, but takes an
+ImageNode[] instead to allow you to get an []ImageNodeInfo back after processing
+them in batch. options is an optional GetImageNodeInfoBatch options struct to
+specify whether to keep images in the returned ImageNodeInfo structs, default of
+which is false, and whether to require all image requests to complete
+successfully, default of which is also false. Refer to struct type
+GetImageNodeInfoBatchOptions for more information.
+
+#### type GetImageNodeInfoBatchOptions
+
+```go
+type GetImageNodeInfoBatchOptions struct {
+	GetImageNodeInfoOptions
+	RequireAll bool
+}
+```
+
+GetImageNodeInfoBatchOptions represents the configuration used by
+GetImageNodeInfoBatch. Default for RequireAll is false.
+
+#### type GetImageNodeInfoOptions
+
+```go
+type GetImageNodeInfoOptions struct {
+	ScrapeImages bool
+}
+```
+
+GetImageNodeInfoOptions represents the configuration used by GetImageNodeInfo.
+Default for ScrapeImages is false.
 
 #### func  EnforceURLSchema
 
