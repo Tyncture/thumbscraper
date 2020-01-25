@@ -162,7 +162,7 @@ func GetImageNodeInfo(imageNode ImageNode, options ...GetImageNodeInfoOptions) (
 }
 
 // GetImageNodeInfoBatch does the same thing as GetImageNodeInfo,
-// but takes an ImageNode[] instead to allow you to get an
+// but takes an []ImageNode instead to allow you to get an
 // []ImageNodeInfo back after processing them in batch. options is
 // an optional GetImageNodeInfoBatch options struct to specify whether
 // to keep images in the returned ImageNodeInfo structs, default of
